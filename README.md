@@ -2,10 +2,12 @@
 
 ## Overview
 An attempt to generate Synthdef which restoring OPM (YM2151) sounds using X68000 voice data. OPM is YAMAHA's 4-operator FM synthesis sound chip.
-<br>
+
 OP4 is a 4-operator phase modulation oscillator, and the timbre data is edited by the OP4Editor, which follows the console design of VOPMex (http://picopicose.com/software.html).
-<br>
+
 Parameters for OPM are converted to actual values (amplitude, milliseconds, etc.) and displayed, except for key-scaling, irrational ratio (Detune 2). The original parameters are not intuitive, for example some parameters 0 means maximum. The mapping of parameters to decay times, etc., uses the equation of the approximate curve obtained with LibreOffice Calc from the measurements of the recordings with VOPMex.
+
+Experimentally, the Wav knob specifies 8 types of waveforms derived from OPZ (YM2414). Note that the author doesn't have a real OPM or OPZ and is trying to recover the sound from information on the web.
 
 ## Usage
 - Place the OP4 folder into Platform.userExtensionDir or Platform.systemExtensionDir
