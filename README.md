@@ -7,7 +7,7 @@ OP4 is a 4-operator phase modulation oscillator class for SuperCollider, and the
 
 Parameters for OPM are converted to actual values (amplitude, milliseconds, etc.) and displayed, except for key-scaling, irrational ratio (Detune 2). The original parameters are not intuitive, for example some parameters 0 means maximum. The mapping of parameters to decay times, etc., uses the equation of the approximate curve obtained with LibreOffice Calc from the measurements of the recordings with VOPMex.
 
-Experimentally, the Wav knob specifies 8 types of waveforms derived from OPZ (YM2414). Note that the author doesn't have a real OPM or OPZ and is trying to recover the sound from information on the web.
+Experimentally, the Wav knob specifies 8 types of waveforms derived from the OPZ (YM2414). Note that the author doesn't have a real OPM or OPZ and is trying to recover the sound from information on the web, and the restored sounds are different from the VOPMex sound.
 
 ## Usage
 - Place the OP4/OP4 folder into Platform.userExtensionDir or Platform.systemExtensionDir
