@@ -13,7 +13,7 @@ Experimentally, the Wav knob specifies 8 types of waveforms derived from OPZ (YM
 - Place the OP4 folder into Platform.userExtensionDir or Platform.systemExtensionDir
 - Then launch SuperCollider and see Examples.scd
 
-## References
+## References (all in Japanese)
 
 https://achapi2718.blogspot.com/2019/12/vsti-vopmex-yamaha-ym2151-opm.html
 
