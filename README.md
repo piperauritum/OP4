@@ -10,7 +10,7 @@ Parameters for OPM are converted to actual values (amplitude, milliseconds, etc.
 Experimentally, the Wav knob specifies 8 types of waveforms derived from OPZ (YM2414). Note that the author doesn't have a real OPM or OPZ and is trying to recover the sound from information on the web.
 
 ## Usage
-- Place the OP4 folder into Platform.userExtensionDir or Platform.systemExtensionDir
+- Place the OP4/OP4 folder into Platform.userExtensionDir or Platform.systemExtensionDir
 - Then launch SuperCollider and see Examples.scd
 
 ### References (all in Japanese)
