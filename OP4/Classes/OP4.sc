@@ -4,16 +4,16 @@ OP4 {
 	*ar {|algo, feedback, freqs, envs, kss, pch, levels, dur, bufnums, lfowav, lfofrq, pmd, amd, pms, ams, ames|
 		var buf, egs, algM, mdx, op0, op1, op2, op3, lfoamp, lfopch;
 
-		buf = bufnums.collect{|e| Waveforms.bufnum[e] };
+		buf = bufnums.collect{|e| OPWaveform.bufnum[e] };
 
-		freqs = freqs * Waveforms.pmo(lfowav.asInteger, pms.asInteger, lfofrq, pmd);
+		freqs = freqs * OPWaveform.pmo(lfowav.asInteger, pms.asInteger, lfofrq, pmd);
 
 		algM = this.algoMatrix(algo);
 		mdx = algM[0..2] * 10;
 
-		lfoamp = Waveforms.amo(lfowav.asInteger, ams.asInteger, lfofrq, amd);
+		lfoamp = OPWaveform.amo(lfowav.asInteger, ams.asInteger, lfofrq, amd);
 		egs = envs.collect{|e,i|
-			var scale = Index.kr(Waveforms.ksbufnum[kss[i]], pch);
+			var scale = Index.kr(OPWaveform.ksbufnum[kss[i]], pch);
 			var gate = EnvGen.kr(Env.linen(0, dur, 0));
 			var env = EnvGen.kr(e, gate, timeScale: scale) * levels[i];
 			LinSelectX.kr(ames[i], [env, env * lfoamp]);
@@ -107,7 +107,7 @@ OP4 {
 
 			// Free itself when the sound is gone
 			gte = env.collect{|e,i|
-				var scale = Index.kr(Waveforms.ksbufnum[dx[\sca][i]], pch);
+				var scale = Index.kr(OPWaveform.ksbufnum[dx[\sca][i]], pch);
 				var gate = EnvGen.kr(Env.linen(0, dur, 0));
 				EnvGen.kr(e, gate, timeScale: scale);
 			};
@@ -121,7 +121,7 @@ OP4 {
 }
 
 
-Waveforms {
+OPWaveform {
 	classvar buf, ksbuf, sigs;
 
 	*bufs {
@@ -195,7 +195,7 @@ Waveforms {
 		Server.local.waitForBoot {
 			Routine {
 
-				// ==== OPZ operator waveforms ====
+				// ==== OPZ operator Waveforms ====
 				// cf. https://wave.hatenablog.com/entry/2021/09/20/212800
 
 				buf = Buffer.allocConsecutive(8, Server.local, 2048, 1);
