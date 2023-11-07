@@ -1,0 +1,41 @@
+CLASS:: OP4
+SUMMARY:: Four-operator phase modulation oscillator.
+CATEGORIES:: Emulator
+
+DESCRIPTION::
+An attempt to generate Synthdef which restoring OPM (YM2151) sounds using LINK::https://stdkmd.net/toypiano/controller.js-16-19.htm##timbre data for X68000::. OPM is YAMAHA's 4-operator FM synthesis sound chip.
+
+link::Classes/OP4:: is a 4-operator phase modulation oscillator class for SuperCollider, and the timbre data is edited by the link::Classes/OP4Editor::, which follows the console design of LINK::http://picopicose.com/software.html##VOPMex::.
+
+The parameters for the OPM are converted to actual values (amplitude, milliseconds, etc.) and displayed, except for the key-scaling and the irrational ratio (detune 2). The original parameters are not intuitive, e.g. 0 is the maximum value for some parameters. The mapping of the parameters to decay times, etc., uses the equation of the approximate curve obtained with LibreOffice Calc from the measurements of the VOPMex output.
+
+Experimentally, the Wav knobs specify 8 types of waveforms derived from the OPZ (YM2414). Please note that the author owns neither actual OPM nor OPZ and is trying to restore the sounds only from information on the web, and the restored sounds are different from the VOPMex sound.
+
+EXAMPLES::
+
+CODE::
+// Define a synth by using timbre data.
+(
+var prog, param;
+
+prog = [ 4.0, 0.0, 15.0, 2.0, 8.061, 0.0, 0.0, 0.0, 0.0 ];
+
+param = [ [ 0.082, 0.151, 2.382, 0.0, 17.777, 3.489, 1.0, 3.0, -2.0, 0.0, 0.0, 0.0 ], [ 1.0, 0.039, 6.507, 0.0, 67.891, 3.489, 2.0, 1.0, 0.0, 0.0, 1.0, 0.0 ], [ 0.049, 0.108, 4.655, 0.0, 12.717, 7.062, 2.0, 1.0, -2.0, 0.0, 0.0, 0.0 ], [ 0.546, 0.077, 4.655, 0.0, 67.891, 3.489, 2.0, 4.0, 2.0, 0.0, 1.0, 0.0 ] ];
+
+OP4.sdef(\op4test, prog, param);
+)
+
+// Test random notes.
+(
+x = Pbind(
+	\instrument, \op4test,
+	\dur, Pwhite(0.1, 0.8),
+	\pch, Pwhite(36*2, 84*2)/2,
+	\dyn, 1,
+	\amp, 0.3,
+	\pan, Pwhite(-0.5, 0.5)
+).play;
+)
+
+x.stop;
+::

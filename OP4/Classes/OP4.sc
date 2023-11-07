@@ -2,7 +2,9 @@ OP4 {
 	classvar ksbuf, sigs;
 
 	*ar {|algo, feedback, freqs, envs, kss, pch, levels, dur, bufnums, lfowav, lfofrq, pmd, amd, pms, ams, ames|
-		var buf, egs, algM, mdx, op0, op1, op2, op3, lfoamp, lfopch;
+		var gate, buf, egs, algM, mdx, op0, op1, op2, op3, lfoamp, lfopch;
+
+		gate = EnvGen.kr(Env.linen(0, dur, 0));
 
 		buf = bufnums.collect{|e| OPWaveform.bufnum[e] };
 
@@ -14,7 +16,6 @@ OP4 {
 		lfoamp = OPWaveform.amo(lfowav.asInteger, ams.asInteger, lfofrq, amd);
 		egs = envs.collect{|e,i|
 			var scale = Index.kr(OPWaveform.ksbufnum[kss[i]], pch);
-			var gate = EnvGen.kr(Env.linen(0, dur, 0));
 			var env = EnvGen.kr(e, gate, timeScale: scale) * levels[i];
 			LinSelectX.kr(ames[i], [env, env * lfoamp]);
 		};
@@ -66,7 +67,7 @@ OP4 {
 
 		op_mask = prog[2].asInteger.asBinaryDigits(4).reverse;
 
-		SynthDef(name, {|dur, pch, dyn, amp, pan=0|
+		SynthDef(name, {|dur, pch, dyn=1, amp=0.1, pan=0|
 			var env, frq, sig, gte, msk, dne;
 			env = Array.fill(4, {|i|
 				Env(
@@ -198,7 +199,7 @@ OPWaveform {
 				// ==== OPZ operator Waveforms ====
 				// cf. https://wave.hatenablog.com/entry/2021/09/20/212800
 
-				buf = Buffer.allocConsecutive(8, Server.local, 2048, 1);
+				buf = Buffer.allocConsecutive(8, Server.local, 2048, 1, bufnum: 100);	// bufnum 100 - 107
 
 				sigs = Array.fill(8, {|i|
 					var sig = Signal.newClear(1024);
@@ -225,7 +226,7 @@ OPWaveform {
 
 				// ==== OPM key-scale map ====
 
-				ksbuf = Buffer.allocConsecutive(4, Server.local, 200, 1);
+				ksbuf = Buffer.allocConsecutive(4, Server.local, 200, 1, bufnum: 108);	// bufnum 108 - 111
 
 				sigs = Array.fill(4, {|j|
 					var coef = [
