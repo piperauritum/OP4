@@ -1,7 +1,7 @@
 // Launch the OP4Editor by evaluating the following, then select a timbre.
 // The editor defines the synth \op4test.
 (
-(thisProcess.nowExecutingPath.dirname +/+ "timbre.scd").load;		// Load Presets (~xTimbre)
+"timbre.scd".resolveRelative.load;		// Load Presets (~xTimbre)
 ~ope = OP4Editor.new;
 )
 
