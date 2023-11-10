@@ -1,9 +1,9 @@
 # OP4
 
 ## Overview
-An attempt to generate Synthdef which restoring OPM (YM2151) sounds using X68000 timbre data. OPM is YAMAHA's 4-operator FM synthesis sound chip.
+An attempt to generate Synthdef by Takumi Ikeda, which restoring OPM (YM2151) sounds using [timbre data for X68000](https://stdkmd.net/toypiano/controller.js-16-19.htm). OPM is YAMAHA's 4-operator FM synthesis sound chip.
 
-OP4 is a 4-operator phase modulation oscillator class for SuperCollider, and the timbre data is edited by the OP4Editor, which follows the console design of VOPMex.
+OP4 is a 4-operator phase modulation oscillator class for SuperCollider, and the timbre data is edited by the OP4Editor, which follows the console design of [VOPMex](http://picopicose.com/software.html).
 
 The parameters for the OPM are converted to actual values (amplitude, milliseconds, etc.) and displayed, except for the key-scaling and the irrational ratio (detune 2). The original parameters are not intuitive, e.g. 0 is the maximum value for some parameters. The mapping of the parameters to decay times, etc., uses the equation of the approximate curve obtained with LibreOffice Calc from the measurements of the VOPMex output.
 

@@ -1,15 +1,14 @@
-OP4Editor {
-	var <>prog, <>param, op_mask,
-	wd, algoList, timbList, knobs, lfoList, lfoKnobs, fbKnob, progNbx, maskBtn, envView,
-	ampSp, timeSp, susSp, sca, ovt, fine, fbSp, wavSp, lfrqSp,
-	spec, op_label, pg_label,
-	dicProg;
+OP4Editor : OP4 {
+	var wd, algoList, timbList, knobs, lfoList, lfoKnobs, fbKnob, progNbx, maskBtn, envView,
+	ampSp, timeSp, susSp, sca, ovt, fine, fbSp, wavSp, lfrqSp, spec;
 
-	*new { | prog, param |
-		^super.newCopyArgs(prog, param).init;
+	*new {|defname='op4test', prog, param, fxbus|
+		^super.newCopyArgs(defname, prog, param, fxbus).init;
 	}
 
 	init {
+		super.init;
+
 		wd = Window(\OP4Editor, Rect(100, 100, 720, 360));
 		wd.alwaysOnTop = true;
 		wd.front;
@@ -26,11 +25,6 @@ OP4Editor {
 		lfrqSp = [0, 60, \lin, 0.1].asSpec;
 
 		spec = [ampSp, timeSp, timeSp, ampSp, susSp, timeSp, sca, ovt, fine, sca, ampSp, wavSp];
-		op_label = OP4.op_label;
-		pg_label = OP4.pg_label;
-
-		if ( prog.isNil ) { prog = [0, 0, 15, 0, 0, 0, 0, 0, 0] };
-		if ( param.isNil ) { param = Array.fill(4, { [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0] }) };
 
 		this.setProg;
 
@@ -44,10 +38,7 @@ OP4Editor {
 	}
 
 	dispParam {
-		var dx;
-		dx = param.flop;
-		dx = [op_label, dx].flop.flatten(1);
-		dx = Dictionary.newFrom(dx);
+		super.init;
 
 		param.do{|p,m|
 			p.do{|e,n|
@@ -73,15 +64,16 @@ OP4Editor {
 
 		4.do{|i|
 			var ev = Env(
-				levels: [0, 1, dx[\d1lev][i], 0, 0],
-				times: [dx[\atk][i], dx[\d1t][i], dx[\d2t][i], dx[\rel][i]],
+				levels: [0, 1, dicParam[\d1lev][i], 0, 0],
+				times: [dicParam[\atk][i], dicParam[\d1t][i], dicParam[\d2t][i], dicParam[\rel][i]],
 				curve: [\sin, \cub, \cub, \cub],
 				releaseNode: 3
 			);
 			envView[i].setEnv(ev);
 		};
 
-		this.sdef;
+		prog = pg_label.collect{|e| dicProg[e]};
+		super.sdef;
 	}
 
 
@@ -96,7 +88,7 @@ OP4Editor {
 		var timb, ary, pg;
 		var atk2ms, dec2ms, rel2ms;
 
-		timb = this.preset[n];
+		timb = this.presets[n];
 		ary = Array2D.fromArray(5, 11, timb);
 		pg = ary.rowAt(0);
 
@@ -150,12 +142,6 @@ OP4Editor {
 	}
 
 
-	sdef {
-		prog = pg_label.collect{|e| dicProg[e]};
-		OP4.sdef(\op4test, prog, param);
-	}
-
-
 	// ==== GUI ====
 
 	panelAlgo {
@@ -187,7 +173,7 @@ OP4Editor {
 		.font_(Font.sansSerif(12).boldVariant);
 
 		timbList = PopUpMenu(wd, Rect(120, 20, 100, 20))
-		.items_(this.preset.flop[this.preset[0].size-2])
+		.items_(this.presets.flop[this.presets[0].size-2])
 		.action_({|i|
 			if ( i.value == 0 ) {
 				prog = [0, 0, 15, 0, 0, 0, 0, 0, 0];
@@ -351,7 +337,7 @@ OP4Editor {
 
 	// ==== TIMBRE DATA ====
 
-	preset {
+	presets {
 		// cf.
 		// https://stdkmd.net/toypiano/controller.js-16-19.htm
 		// https://stdkmd.net/toypiano/controller.js-17-19.htm
