@@ -1,8 +1,8 @@
 OPWaveform {
-	classvar waveformBuf, keyScaleBuf, sigs;
+	classvar waveBuf, keyScaleBuf, sigs;
 
-	waveformBufnum {
-		^waveformBuf.collect{|e| e.bufnum };
+	waveBufnum {
+		^waveBuf.collect{|e| e.bufnum };
 	}
 
 	keyScaleBufnum {
@@ -67,7 +67,7 @@ OPWaveform {
 				// ==== OPZ operator Waveforms ====
 				// cf. https://wave.hatenablog.com/entry/2021/09/20/212800
 
-				waveformBuf = Buffer.allocConsecutive(8, Server.local, 2048, 1, bufnum: 100);	// bufnum 100 - 107
+				waveBuf = Buffer.allocConsecutive(8, Server.local, 2048, 1, bufnum: 100);	// bufnum 100 - 107
 
 				sigs = Array.fill(8, {|i|
 					var sig = Signal.newClear(1024);
@@ -89,7 +89,7 @@ OPWaveform {
 				1.wait;
 
 				sigs.do{|sig, i|
-					waveformBuf[i].sendCollection(sig.asWavetable);
+					waveBuf[i].sendCollection(sig.asWavetable);
 				};
 
 				// ==== OPM key-scale map ====

@@ -29,7 +29,7 @@ OP4 : OPWaveform {
 
 		gate = EnvGen.kr(Env.linen(0, dur, 0));
 
-		buf = dicParam[\wav].collect{|e| super.waveformBufnum[e] };
+		buf = dicParam[\wav].collect{|e| super.waveBufnum[e] };
 
 		freqs = freqs * super.pmo(dicProg[\lfowav].asInteger, dicProg[\pms].asInteger, dicProg[\lfofrq], dicProg[\pmd]);
 
