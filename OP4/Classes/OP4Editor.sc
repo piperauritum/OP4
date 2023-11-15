@@ -2,11 +2,11 @@ OP4Editor : OP4 {
 	var wd, algoList, timbList, knobs, lfoList, lfoKnobs, fbKnob, progNbx, maskBtn, envView,
 	ampSp, timeSp, susSp, sca, ovt, fine, fbSp, wavSp, lfrqSp, spec;
 
-	*new {|defname='op4test', prog, param, fxbus|
-		^super.newCopyArgs(defname, prog, param, fxbus).init;
+	*new {|defname='op4test', prog, param, outbus=0, fxbus, fxbal=0|
+		^super.newCopyArgs(defname, prog, param, outbus, fxbus, fxbal).init0;
 	}
 
-	init {
+	init0 {
 		super.init;
 
 		wd = Window(\OP4Editor, Rect(100, 100, 720, 360));
@@ -72,8 +72,7 @@ OP4Editor : OP4 {
 			envView[i].setEnv(ev);
 		};
 
-		prog = pg_label.collect{|e| dicProg[e]};
-		super.sdef;
+		this.sadd;
 	}
 
 
@@ -141,6 +140,11 @@ OP4Editor : OP4 {
 		this.dispParam;
 	}
 
+	sadd {
+		prog = pg_label.collect{|e| dicProg[e]};
+		super.init;
+	}
+
 
 	// ==== GUI ====
 
@@ -162,7 +166,7 @@ OP4Editor : OP4 {
 		])
 		.action_({|i|
 			dicProg[\algo] = i.value;
-			this.sdef;
+			this.sadd;
 		});
 	}
 
@@ -196,7 +200,7 @@ OP4Editor : OP4 {
 			nb = NumberBox(cv, Rect(30, 20*n+40, 35, 15))
 			.action_({|v|
 				dicProg[[\fb, \ams, \pms][n]] = v.value;
-				this.sdef;
+				this.sadd;
 			});
 
 			StaticText(cv, Rect(0, 20*n+40, 30, 15))
@@ -217,7 +221,7 @@ OP4Editor : OP4 {
 			.action_({|v|
 				op_mask[n] = v.value;
 				dicProg[\mask] = op_mask.collect{|e,i| 2 ** i * e}.inject(0, _+_).asInteger;
-				this.sdef;
+				this.sadd;
 			});
 
 			bt;
@@ -245,7 +249,7 @@ OP4Editor : OP4 {
 		])
 		.action_({|i|
 			dicProg[\lfowav] = i.value;
-			this.sdef;
+			this.sadd;
 		});
 
 		lfoKnobs = Array.fill(3, {|n|
@@ -257,7 +261,7 @@ OP4Editor : OP4 {
 				var va = v.value;
 				dicProg[[\lfofrq, \amd, \pmd][n]] = va;
 				kn.value = [lfrqSp, ampSp, ampSp][n].unmap(v.value);
-				this.sdef;
+				this.sadd;
 			});
 
 			kn = Knob(cv, Rect(x, 55, 35, 35))
@@ -265,7 +269,7 @@ OP4Editor : OP4 {
 				var va = [lfrqSp, ampSp, ampSp][n].map(v.value);
 				dicProg[[\lfofrq, \amd, \pmd][n]] = va;
 				nb.value = va;
-				this.sdef;
+				this.sadd;
 			});
 
 			StaticText(cv, Rect(x, 20, 40, 20))
@@ -303,7 +307,7 @@ OP4Editor : OP4 {
 					var va = v.value;
 					param[m][n] = va;
 					kn.value = sp.unmap(v.value);
-					this.sdef;
+					this.sadd;
 				});
 
 				kn = Knob(cv, Rect(40*n+20, 15, 35, 35))
@@ -311,7 +315,7 @@ OP4Editor : OP4 {
 					var va = sp.map(v.value);
 					param[m][n] = va;
 					nb.value = va;
-					this.sdef;
+					this.sadd;
 				});
 
 				if (n == 8) {

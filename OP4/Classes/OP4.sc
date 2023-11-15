@@ -2,10 +2,10 @@ OP4 : OPWaveform {
 	classvar op_label = #[\lev, \atk, \d1t, \d1lev, \d2t, \rel, \sca, \ovt, \fine, \irr, \ame, \wav];
 	classvar pg_label = #[\algo, \fb, \mask, \lfowav, \lfofrq, \pmd, \amd, \pms, \ams];
 
-	var <>defname, <>prog, <>param, <>fxbus, dicParam, dicProg, op_mask;
+	var <>defname, <>prog, <>param, <>outbus, <>fxbus, <>fxbal, dicParam, dicProg, op_mask;
 
-	*new {|defname='op4test', prog, param, fxbus|
-		^super.newCopyArgs(defname, prog, param, fxbus).init;
+	*new {|defname='op4test', prog, param, outbus=0, fxbus, fxbal=0|
+		^super.newCopyArgs(defname, prog, param, outbus, fxbus, fxbal).init;
 	}
 
 	init {
@@ -116,8 +116,13 @@ OP4 : OPWaveform {
 			dne = msk.collect{|e,i| if (e == 1, { Done.kr(gte[i]) }, { 0 }) };
 			FreeSelf.kr(InRange.kr(sum(dne), msk.sum, msk.sum));
 
-			if ( fxbus != nil ) { OffsetOut.ar(fxbus, sig) };
-			OffsetOut.ar(0, sig);
+			if ( (outbus.notNil) && (fxbal < 1) ) {
+				OffsetOut.ar(outbus, sig * cos(0.5pi * fxbal))
+			};
+
+			if ( (fxbus.notNil) && (fxbal > 0) ) {
+				OffsetOut.ar(fxbus, sig * sin(0.5pi * fxbal))
+			};
 		}).add;
 	}
 }

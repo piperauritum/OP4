@@ -14,13 +14,13 @@ Experimentally, the Wav knobs specify 8 types of waveforms derived from the OPZ 
 EXAMPLES::
 
 code::
-// Launch the editor.
+// Launch editor and select any preset
 e = OP4Editor.new;
 
-// Test a single note.
+// Testing a single note
 Synth(\op4test, [\dur, 0.2, \pch, 12.rand+60, \dyn, 1, \amp, 0.2]);
 
-// Test random notes.
+// Test the random notes
 (
 x = Pbind(
 	\instrument, \op4test,
@@ -32,9 +32,17 @@ x = Pbind(
 ).play;
 )
 
+e.fxbus = 20; e.fxbal = 0.5; e.init;
+
+// Adding an effect
+y = { CombN.ar(InFeedback.ar(20, 2), 0.2, 0.2, 4) }.play;
+
 x.stop;
 
-// Get the program and parameters of the edited timbre.
-e.prog;
-e.param;
+// Get edited timbre's prog and param
+u = e.prog;
+v = e.param;
+
+// Start the editor with prog and param etc.
+e = OP4Editor.new(\op4test, u, v, 0, 20, 0.5);
 ::

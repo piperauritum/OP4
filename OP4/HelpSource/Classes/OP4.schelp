@@ -14,20 +14,20 @@ Experimentally, the Wav knobs specify 8 types of waveforms derived from the OPZ 
 EXAMPLES::
 
 CODE::
-// Define a synth by using timbre data.
+// Defining a synth using timbre data
 (
-var prog, param, fxbus;
+var prog, param, outbus, fxbus, fxbal;
 
 prog = [ 4.0, 0.0, 15.0, 2.0, 8.061, 0.0, 0.0, 0.0, 0.0 ];
 
 param = [ [ 0.082, 0.151, 2.382, 0.0, 17.777, 3.489, 1.0, 3.0, -2.0, 0.0, 0.0, 0.0 ], [ 1.0, 0.039, 6.507, 0.0, 67.891, 3.489, 2.0, 1.0, 0.0, 0.0, 1.0, 0.0 ], [ 0.049, 0.108, 4.655, 0.0, 12.717, 7.062, 2.0, 1.0, -2.0, 0.0, 0.0, 0.0 ], [ 0.546, 0.077, 4.655, 0.0, 67.891, 3.489, 2.0, 4.0, 2.0, 0.0, 1.0, 0.0 ] ];
 
-fxbus = 20;
+outbus = 0; fxbus = 20; fxbal = 0.5;
 
-o = OP4.new(\op4test, prog, param, fxbus);
+o = OP4.new(\op4test, prog, param, outbus, fxbus, fxbal);
 )
 
-// Test random notes
+// Test the random notes
 (
 x = Pbind(
 	\instrument, \op4test,
@@ -39,10 +39,11 @@ x = Pbind(
 ).play;
 )
 
-o.fxbus;  // -> 20
-
-// Add an effect
+// Adding an effect
 y = { CombN.ar(InFeedback.ar(20, 2), 0.2, 0.2, 4) }.play;
+
+// Apply the argument
+o.fxbal = 0; o.init;
 
 x.stop;
 
