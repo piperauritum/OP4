@@ -43,7 +43,6 @@ OP4 : OPWaveform {
 		};
 
 		op0 = this.fbop(buf[0], freqs[0], dicProg[\fb], egs[0]);
-		// op0 = this.fbop(buf[0], freqs[0], dicProg[\fb], LocalIn.ar * dicProg[\fb], egs[0]);
 		op1 = Osc.ar(buf[1], freqs[1], op0 * mdx[0], egs[1]);
 		op2 = Osc.ar(buf[2], freqs[2], Mix([op0, op1] * mdx[1]), egs[2]);
 		op3 = Osc.ar(buf[3], freqs[3], Mix([op0, op1, op2] * mdx[2]), egs[3]);
