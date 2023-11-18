@@ -38,7 +38,8 @@ OP4 : OPWaveform {
 		lfoamp = super.amo(dicProg[\lfowav].asInteger, dicProg[\ams].asInteger, dicProg[\lfofrq], dicProg[\amd]);
 		egs = envs.collect{|e,i|
 			var scale = Index.kr(super.keyScaleBufnum[dicParam[\sca][i]], pch);
-			var env = EnvGen.kr(e, gate, timeScale: scale) * levels[i];
+			var env = EnvGen.kr(e, gate, levelScale: levels[i], timeScale: scale);
+			// var env = EnvGen.kr(e, gate, timeScale: scale) * levels[i];
 			LinSelectX.kr(dicParam[\ame][i], [env, env * lfoamp]);
 		};
 
@@ -68,12 +69,6 @@ OP4 : OPWaveform {
 
 		^alg[algN];
 	}
-
-	// fbop {|bufnum, freq, feedback, mod, eg|
-	// 	if ( bufnum == 0 )
-	// 	{ ^SinOscFB.ar(freq, feedback * eg, eg) }
-	// 	{ ^Osc.ar(bufnum, freq, mod, eg) };
-	// }
 
 	fbop {|bufnum, freq, fb, eg|
 		var fblev =			// "Inside X68000" p.277
