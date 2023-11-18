@@ -8,7 +8,7 @@ OP4Editor : OP4 {
 
 	init0 {
 		super.init;
-
+		// this.presets.flop[1].asSet.asArray.sort.postln;
 		wd = Window(\OP4Editor, Rect(100, 100, 720, 360));
 		wd.alwaysOnTop = true;
 		wd.front;
@@ -123,7 +123,7 @@ OP4Editor : OP4 {
 
 		prog = [
 			pg[0] % 8,								// Algorithm
-			pg[0] >> 3 / 7 * 12, 					// Feedback Level
+			pg[0] >> 3, 							// Feedback Level
 			pg[1],									// Operator Mask
 			pg[2],									// LFO Waveform
 			63.5 * (-0.043 * (256 - pg[4])).exp,	// LFO Frequency
@@ -192,12 +192,13 @@ OP4Editor : OP4 {
 
 
 	panelProg {
-		var cv = CompositeView(wd, Rect(120, 50, 100, 155));
+		var cv = CompositeView(wd, Rect(120, 40, 100, 155));
 
 		progNbx = Array.fill(3, {|n|
 			var nb;
 
-			nb = NumberBox(cv, Rect(30, 20*n+40, 35, 15))
+			nb = PopUpMenu(cv, Rect(30, 20*n+40, 50, 15))
+			.items_((0..[7,3,7][n]).collect{|e| e.asString})
 			.action_({|v|
 				dicProg[[\fb, \ams, \pms][n]] = v.value;
 				this.sadd;
@@ -282,10 +283,22 @@ OP4Editor : OP4 {
 
 
 	panelEnv {
-		var cv = CompositeView(wd, Rect(0, 255, 640, 360));
+		var cv, pb;
+
+		cv = CompositeView(wd, Rect(0, 255, 640, 360));
 
 		envView = Array.fill(4, {|n|
-			EnvelopeView(cv, Rect(160*n, 0, 160, 100)).editable_(false);
+			EnvelopeView(cv, Rect(160*n, 0, 160, 80)).editable_(false);
+		});
+
+		pb = Button(cv, Rect(0, 82, 100, 20))
+		.states_([
+			["post data", Color.white, Color.gray]
+		])
+		.font_(Font.sansSerif(15, true))
+		.action_({
+			("x = " ++ prog.collect{|n| if( n % 1 == 0 ) { n.asInteger } { n }} ++ ";").postln;
+			("y = " ++ param.collect{|e| e.collect{|n| if( n % 1 == 0 ) { n.asInteger } { n }}} ++ ";").postln;
 		});
 	}
 
@@ -342,9 +355,38 @@ OP4Editor : OP4 {
 	// ==== TIMBRE DATA ====
 
 	presets {
-		// cf.
-		// https://stdkmd.net/toypiano/controller.js-16-19.htm
-		// https://stdkmd.net/toypiano/controller.js-17-19.htm
+		/*
+		https://stdkmd.net/toypiano/controller.js-16-19.htm
+		https://stdkmd.net/toypiano/controller.js-17-19.htm
+
+		OPMDRV.X format ( https://stdkmd.net/toypiano/#toneparameters )
+
+		# Program [0..10]
+		FLCON 0-63	Algorithm + Feedback Level
+		SLOT 0-15	Operator Mask
+		WAVE 0-3	LFO Waveform
+		SYNC 0-1
+		SPEED 0-255	LFO Frequency
+		PMD 0-127	Pitch Modulation Depth
+		AMD 0-127	Amplitude Modulation Depth
+		PMS 0-7		Pitch Modulation Sensitivity
+		AMS 0-3		Amplitude Modulation Sensitivity
+		RLPAN 0-3	Panning
+		Empty
+
+		# Parameters [11..21][22..32][33..43][44..54]
+		AR 0-31		Attack Rate
+		D1R 0-31	Decay1 Rate
+		D2R 0-31	Decay2 Rate
+		RR 0-15		Release Rate
+		D1L 0-15	Decay1 Level
+		TL 0-127	Total Level
+		KS 0-3		Keyboard Scaling
+		MUL 0-15	Overtone (Multiplier)
+		DT1 0-7		Fine (Detune 1)
+		DT2 0-3		Irrational ratio (Detune 2)
+		AMSEN 0-1	Amplitude Modulation Enable
+		*/
 
 		^[
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

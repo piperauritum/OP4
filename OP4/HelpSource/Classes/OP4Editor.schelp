@@ -22,7 +22,7 @@ Synth(\op4test, [\dur, 0.2, \pch, 12.rand+60, \dyn, 1, \amp, 0.2]);
 
 // Test the random notes
 (
-x = Pbind(
+u = Pbind(
 	\instrument, \op4test,
 	\dur, Pwhite(0.1, 0.8),
 	\pch, Pwhite(36*2, 84*2)/2,
@@ -35,14 +35,14 @@ x = Pbind(
 e.fxbus = 20; e.fxbal = 0.5; e.init;
 
 // Adding an effect
-y = { CombN.ar(InFeedback.ar(20, 2), 0.2, 0.2, 4) }.play;
+v = { CombN.ar(InFeedback.ar(20, 2), 0.2, 0.2, 4) }.play;
 
-x.stop;
+u.stop;
 
 // Get edited timbre's prog and param
-u = e.prog;
-v = e.param;
+x = e.prog;
+y = e.param;
 
 // Start the editor with prog and param etc.
-e = OP4Editor.new(\op4test, u, v, 0, 20, 0.5);
+e = OP4Editor.new(\op4test, x, y, 0, 20, 0.5);
 ::

@@ -20,7 +20,6 @@ OP4 : OPWaveform {
 		dicProg = Dictionary.newFrom(dicProg);
 
 		op_mask = prog[2].asInteger.asBinaryDigits(4).reverse;
-
 		this.sdef;
 	}
 
@@ -43,7 +42,8 @@ OP4 : OPWaveform {
 			LinSelectX.kr(dicParam[\ame][i], [env, env * lfoamp]);
 		};
 
-		op0 = this.fbop(buf[0], freqs[0], dicProg[\fb], LocalIn.ar * dicProg[\fb], egs[0]);
+		op0 = this.fbop(buf[0], freqs[0], dicProg[\fb], egs[0]);
+		// op0 = this.fbop(buf[0], freqs[0], dicProg[\fb], LocalIn.ar * dicProg[\fb], egs[0]);
 		op1 = Osc.ar(buf[1], freqs[1], op0 * mdx[0], egs[1]);
 		op2 = Osc.ar(buf[2], freqs[2], Mix([op0, op1] * mdx[1]), egs[2]);
 		op3 = Osc.ar(buf[3], freqs[3], Mix([op0, op1, op2] * mdx[2]), egs[3]);
@@ -69,10 +69,21 @@ OP4 : OPWaveform {
 		^alg[algN];
 	}
 
-	fbop {|bufnum, freq, feedback, mod, eg|
+	// fbop {|bufnum, freq, feedback, mod, eg|
+	// 	if ( bufnum == 0 )
+	// 	{ ^SinOscFB.ar(freq, feedback * eg, eg) }
+	// 	{ ^Osc.ar(bufnum, freq, mod, eg) };
+	// }
+
+	fbop {|bufnum, freq, fb, eg|
+		var fblev =			// "Inside X68000" p.277
+		if ( fb == 0 )
+		{ 0 }
+		{ 2 ** ( fb - 5) * pi };
+
 		if ( bufnum == 0 )
-		{ ^SinOscFB.ar(freq, feedback * eg, eg) }
-		{ ^Osc.ar(bufnum, freq, mod, eg) };
+		{ ^SinOscFB.ar(freq, fblev * eg, eg) }
+		{ ^Osc.ar(bufnum, freq, LocalIn.ar * fblev, eg) };
 	}
 
 	sdef {

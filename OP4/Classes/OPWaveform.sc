@@ -22,42 +22,41 @@ OPWaveform {
 		{ 0 } {
 			switch (ams)
 			{ 0 } { ^DC.kr(1) }
-			{ 1 } { ^LFSaw.kr(freq, 0, 0.5, 0.5).lincurve(curve:2.5) }
-			{ 2 } { ^LFSaw.kr(freq, 0, 0.5, 0.5).lincurve(curve:5) }
-			{ 3 } { ^LFSaw.kr(freq, 0, 0.5, 0.5).lincurve(curve:10) }
+			{ 1 } { ^LFSaw.kr(freq, 0).linexp(-1, 1, -24.dbamp, 1) }
+			{ 2 } { ^LFSaw.kr(freq, 0).linexp(-1, 1, -48.dbamp, 1) }
+			{ 3 } { ^LFSaw.kr(freq, 0).linexp(-1, 1, -84.dbamp, 1) }
 		}
 		{ 1 } {
 			switch (ams)
 			{ 0 } { ^DC.kr(1) }
-			{ 1 } { ^LFPulse.kr(freq, 0, 0.5, 1 - dbamp(-24), dbamp(-24)) }
-			{ 2 } { ^LFPulse.kr(freq, 0, 0.5, 1 - dbamp(-48), dbamp(-48)) }
-			{ 3 } { ^LFPulse.kr(freq, 0, 0.5, 1, 0) }
+			{ 1 } { ^LFPulse.kr(freq, 0.5, 0.5).linlin(0, 1, -24.dbamp, 1) }
+			{ 2 } { ^LFPulse.kr(freq, 0.5, 0.5).linlin(0, 1, -48.dbamp, 1) }
+			{ 3 } { ^LFPulse.kr(freq, 0.5) }
 		}
 		{ 2 } {
 			switch (ams)
 			{ 0 } { ^DC.kr(1) }
-			{ 1 } { ^LFTri.kr(freq, 0, 0.5, 0.5).lincurve(curve:2.5) }
-			{ 2 } { ^LFTri.kr(freq, 0, 0.5, 0.5).lincurve(curve:5) }
-			{ 3 } { ^LFTri.kr(freq, 0, 0.5, 0.5).lincurve(curve:10) }
+			{ 1 } { ^LFTri.kr(freq, 0).linexp(-1, 1, -24.dbamp, 1) }
+			{ 2 } { ^LFTri.kr(freq, 0).linexp(-1, 1, -48.dbamp, 1) }
+			{ 3 } { ^LFTri.kr(freq, 0).linexp(-1, 1, -84.dbamp, 1) }
 		}
 		{ 3 } {
 			switch (ams)
 			{ 0 } { ^DC.kr(1) }
-			{ 1 } { ^LFNoise0.kr(freq, 1 - dbamp(-3), dbamp(-3)) }
-			{ 2 } { ^LFNoise0.kr(freq, 1 - dbamp(-6), dbamp(-6)) }
-			{ 3 } { ^LFNoise0.kr(freq, 0.5, 0.5) }
+			{ 1 } { ^LFNoise0.kr(freq).linexp(-1, 1, -24.dbamp, 1) }
+			{ 2 } { ^LFNoise0.kr(freq).linexp(-1, 1, -48.dbamp, 1) }
+			{ 3 } { ^LFNoise0.kr(freq).linexp(-1, 1, -84.dbamp, 1) }
 		}
 	}
 
 	lfopch {|wav, pms, freq|
 		var pow = [99, 4, 3, 2, 1, 0, -2, -3][pms];
-		var ratio = [1, -1].collect{|a| 2 ** ((a/(2 ** pow))/12) };
-		var range = ratio[0] - ratio[1];
+		var ratio = [-1, 1].collect{|a| 2 ** ((a/(2 ** pow))/12) };
 		switch (wav)
-		{ 0 } { ^LFSaw.kr(freq, 0, range/2, range/2 + ratio[1]) }
-		{ 1 } { ^LFPulse.kr(freq, 0, 0.5, range, ratio[1]) }
-		{ 2 } { ^LFTri.kr(freq, 0, range/2, range/2 + ratio[1]) }
-		{ 3 } { ^LFNoise0.kr(freq, range/2, range/2 + ratio[1]) }
+		{ 0 } { ^LFSaw.kr(freq, 0).linlin(-1, 1, ratio[0], ratio[1]) }
+		{ 1 } { ^LFPulse.kr(freq, 0, 0.5).linlin(0, 1, ratio[0], ratio[1]) }
+		{ 2 } { ^LFTri.kr(freq, 0).linlin(-1, 1, ratio[0], ratio[1]) }
+		{ 3 } { ^LFNoise0.kr(freq).linlin(-1, 1, ratio[0], ratio[1]) }
 	}
 
 	*initClass {
