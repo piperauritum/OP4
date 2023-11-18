@@ -39,7 +39,6 @@ OP4 : OPWaveform {
 		egs = envs.collect{|e,i|
 			var scale = Index.kr(super.keyScaleBufnum[dicParam[\sca][i]], pch);
 			var env = EnvGen.kr(e, gate, levelScale: levels[i], timeScale: scale);
-			// var env = EnvGen.kr(e, gate, timeScale: scale) * levels[i];
 			LinSelectX.kr(dicParam[\ame][i], [env, env * lfoamp]);
 		};
 
